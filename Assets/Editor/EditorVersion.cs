@@ -32,27 +32,28 @@ public class EditorVersion {
 
 		if (thisProjectOfficialUnityVersion != null)
 		{
-			Debug.Log("Project's Official Unity Version: " + thisProjectOfficialUnityVersion);
 			if (thisProjectOfficialUnityVersion.Equals(thisUserCurrentUnityVersion))
 			{
 				// The user is currently running the correct version of the Unity editor.
+				Debug.Log("Project's official Unity version is " + thisProjectOfficialUnityVersion + " -- matches your editor.");
 			}
 			else
 			{
 				// The user is likely NOT running the correct version of the Unity editor.
-				string errorMessage = "The official Unity version for this project is \nUnity " + thisProjectOfficialUnityVersion + " but you are currently running \nUnity " + thisUserCurrentUnityVersion + " \n\n> Ask your tech lead for assistance.";
+				string errorMessage = "Project's official Unity version is \nUnity " + thisProjectOfficialUnityVersion + "\n -- \nBut you are currently running \nUnity " + thisUserCurrentUnityVersion + " \n\n> Ask your tech lead for assistance.";
 				Debug.LogError(errorMessage.Replace("\n",""));
 				EditorUtility.DisplayDialog("Unity Version Warning", errorMessage, "OK");
 			}
 		}
 		else
 		{
-			Debug.Log("Project's 'Official Unity Version' could not be found.");
+			// No official Unity version has been set by the tech lead. Sets this Unity version to be the correct one
+			Debug.Log("Project's official Unity version could not be found.");
 			StreamWriter writer = new StreamWriter("ProjectSettings/ProjectVersionOfficial.txt");
 			writer.WriteLine(versionStringPrefix + thisUserCurrentUnityVersion + "\n");
 			writer.Close();
 			thisProjectOfficialUnityVersion = thisUserCurrentUnityVersion;
-			Debug.Log("Set initial 'Official Unity Version' to : " + thisProjectOfficialUnityVersion);
+			Debug.Log("Set initial official Unity version to : " + thisProjectOfficialUnityVersion);
 		}
 	}
 }
