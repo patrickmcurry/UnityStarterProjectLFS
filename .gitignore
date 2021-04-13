@@ -9,6 +9,7 @@ Thumbs.db
 
 # Ignore Unity artifacts
 [Ll]ibrary/
+[Ll]ogs/
 [Tt]emp/
 [Oo]bj/
 [Bb]uild/
@@ -25,7 +26,11 @@ Thumbs.db
 *.userprefs
 *.pidb
 *.booproj
+*.vsconfig
+.vs/
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
 
+# Output
+Output/
