@@ -10,12 +10,21 @@ public class EditorVersion {
 
 	static EditorVersion()
 	{
+		// If you open the project in Unity 4.x, save that to ProjectVersion.txt
 		thisUserCurrentUnityVersion = Application.unityVersion;
 #if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
         StreamWriter writer = new StreamWriter("ProjectSettings/ProjectVersion.txt");
 		writer.WriteLine(versionStringPrefix + thisUserCurrentUnityVersion + "\n");
 		writer.Close();
+
+		// Classic Unity method of getting level/scene name
+		string loadedLevelName = Application.loadedLevelName;
+#else
+		// More modern Unity method of getting level/scene name
+		string loadedLevelName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 #endif
+
+		// Handle official Unity version for the project
 		if (File.Exists("ProjectSettings/ProjectVersionOfficial.txt"))
 		{
 			// Get the official version of Unity this project has decided to use
@@ -55,5 +64,30 @@ public class EditorVersion {
 			thisProjectOfficialUnityVersion = thisUserCurrentUnityVersion;
 			Debug.Log("Set initial official Unity version to : " + thisProjectOfficialUnityVersion);
 		}
+
+		// Warn the editor user if they haven't set their company and product name yet
+		if (PlayerSettings.companyName == "DefaultCompany" && PlayerSettings.productName == "UnityStarterProject")
+		{
+			Debug.LogWarning("Please set your Company Name and Product Name in Edit -> Project Settings -> Player");
+		}
+		else if (PlayerSettings.companyName == "DefaultCompany")
+		{
+			Debug.LogWarning("Please set your Company Name in Edit -> Project Settings -> Player");
+		}
+		else if (PlayerSettings.productName == "UnityStarterProject")
+		{
+			Debug.LogWarning("Please set your Product Name in Edit -> Project Settings -> Player");
+		}
+
+		// Warn the editor user if they're working in a new or unsaved level/scene file
+		if (loadedLevelName == "")
+		{
+	        Debug.LogError("No scene name detected -- you may be in an unsaved level/scene. This message can appear more than once.");
+		}
+
+		// Disable log messages in release builds
+		#if !(DEVELOPMENT_BUILD || UNITY_EDITOR)
+			Debug.logger.logEnabled = false; 
+		#endif
 	}
 }
